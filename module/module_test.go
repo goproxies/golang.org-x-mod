@@ -104,7 +104,7 @@ var checkPathTests = []struct {
 	{"x.y(/z", false, false, true},
 	{"x.y)/z", false, false, true},
 	{"x.y*/z", false, false, false},
-	{"x.y+/z", false, true, true},
+	{"x.y+/z", false, false, true},
 	{"x.y,/z", false, false, true},
 	{"x.y-/z", true, true, true},
 	{"x.y./zt", false, false, false},
@@ -134,7 +134,7 @@ var checkPathTests = []struct {
 	{"x.y/z(", false, false, true},
 	{"x.y/z)", false, false, true},
 	{"x.y/z*", false, false, false},
-	{"x.y/z+", true, true, true},
+	{"x.y/z+", false, false, true},
 	{"x.y/z,", false, false, true},
 	{"x.y/z-", true, true, true},
 	{"x.y/z.t", true, true, true},
@@ -163,6 +163,13 @@ var checkPathTests = []struct {
 	{"x.y/com1", false, false, false},
 	{"x.y/com1.txt", false, false, false},
 	{"x.y/calm1", true, true, true},
+	{"x.y/z~", true, true, true},
+	{"x.y/z~0", false, false, true},
+	{"x.y/z~09", false, false, true},
+	{"x.y/z09", true, true, true},
+	{"x.y/z09~", true, true, true},
+	{"x.y/z09~09z", true, true, true},
+	{"x.y/z09~09z~09", false, false, true},
 	{"github.com/!123/logrus", false, false, true},
 
 	// TODO: CL 41822 allowed Unicode letters in old "go get"
@@ -241,7 +248,7 @@ var escapeTests = []struct {
 	path string
 	esc  string // empty means same as path
 }{
-	{path: "ascii.com/abcdefghijklmnopqrstuvwxyz.-+/~_0123456789"},
+	{path: "ascii.com/abcdefghijklmnopqrstuvwxyz.-/~_0123456789"},
 	{path: "github.com/GoogleCloudPlatform/omega", esc: "github.com/!google!cloud!platform/omega"},
 }
 
